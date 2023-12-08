@@ -20,6 +20,13 @@ public class KeycloakUserService implements IKeycloakUserService
 {
     @Value("${keycloak.realm}")
     private String realm;
+    @Value("${keycloak.urls.auth}")
+    private String authServerUrl;
+    @Value("{keycloak.adminClientId}")
+    private String adminClientId;
+    @Value("{keycloak.adminClientSecret}")
+    private String adminClientSecret;
+
     private Keycloak keycloak;
 
     @Autowired
@@ -27,6 +34,7 @@ public class KeycloakUserService implements IKeycloakUserService
     {
         this.keycloak = keycloak;
     }
+
 
     @Override
     public UserRegistrationRecord createUser(UserRegistrationRecord userRegistrationRecord)

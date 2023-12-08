@@ -22,12 +22,15 @@ public class KeycloakConfig
     @Bean
     public Keycloak keycloak()
     {
-        return KeycloakBuilder.builder()
+        Keycloak keycloak = KeycloakBuilder.builder()
                 .serverUrl(authServerUrl)
                 .realm(realm)
                 .grantType(OAuth2Constants.CLIENT_CREDENTIALS)
                 .clientId(adminClientId)
                 .clientSecret(adminClientSecret)
                 .build();
+
+        //keycloak.tokenManager().getAccessToken();
+        return keycloak;
     }
 }
