@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.*;
 import java.security.Principal;
 
 @RestController
-@RequestMapping("keycloak/api/users")
+@RequestMapping("/keycloak/api/users")
 public class KeycloakUserApi
 {
     private final KeycloakUserService keycloakUserService;

@@ -37,6 +37,7 @@ public class KeycloakUserService implements IKeycloakUserService
 
         List<CredentialRepresentation> credentials = new ArrayList<>();
         credentials.add(credentialRepresentation);
+
         user.setCredentials(credentials);
 
         UsersResource usersResource = getUsersResource();

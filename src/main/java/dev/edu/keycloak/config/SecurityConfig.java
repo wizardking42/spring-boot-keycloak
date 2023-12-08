@@ -35,8 +35,8 @@ public class SecurityConfig
 //                        .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse()))
                 .csrf(CsrfConfigurer::disable)
                 .authorizeHttpRequests(requests -> requests
-                        .requestMatchers(HttpMethod.GET, "api/v1/demo/hello").authenticated()
-                        .requestMatchers(HttpMethod.GET, "api/v1/demo/hello2").authenticated()
+                        //.requestMatchers(HttpMethod.GET, "api/v1/demo/hello").authenticated()
+                        //.requestMatchers(HttpMethod.GET, "api/v1/demo/hello2").authenticated()
                         .requestMatchers(HttpMethod.POST, "keycloak/api/users").permitAll()
                         .requestMatchers(HttpMethod.GET, "keycloak/api/users").permitAll()
                         .requestMatchers(HttpMethod.DELETE, "keycloak/api/users/{userId}").permitAll());
@@ -54,7 +54,8 @@ public class SecurityConfig
         return (web) -> {
             web.ignoring().requestMatchers(
                     HttpMethod.POST,
-                    "/keycloak/api/users"
+                    "/public/**",
+                    "keycloak/api/users"
             );
         };
     }
