@@ -15,11 +15,11 @@ public class KeycloakConfig
     private String authServerUrl;
     @Value("${keycloak.realm}")
     private String realm;
-    @Value("{keycloak.adminClientId}")
+    @Value("${keycloak.adminClientId}")
     private String adminClientId;
-    @Value("{keycloak.username}")
+    @Value("${keycloak.username}")
     private String username;
-    @Value("{keycloak.password}")
+    @Value("${keycloak.password}")
     private String password;
 
     //@Bean
