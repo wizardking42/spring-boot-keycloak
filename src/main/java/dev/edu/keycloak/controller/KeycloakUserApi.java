@@ -2,6 +2,7 @@ package dev.edu.keycloak.controller;
 
 import dev.edu.keycloak.model.UserRegistrationRecord;
 import dev.edu.keycloak.service.KeycloakUserService;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -9,6 +10,7 @@ import java.security.Principal;
 
 @RestController
 @RequestMapping("/keycloak/api/users")
+@SecurityRequirement(name = "Keycloak")
 public class KeycloakUserApi
 {
     private final KeycloakUserService keycloakUserService;

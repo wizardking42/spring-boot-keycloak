@@ -1,0 +1,14 @@
+{
+  "realm": "myrealm",
+  "auth-server-url": "http://localhost:8080",
+  "resource": "democlient",
+  "credentials": {
+    "secret": "wtgKoNE05CeMzY5AbCOZLXs8uk53zMHR"
+  },
+  "paths": [
+    {
+      "path": "/keycloak/api/users",
+      "enforcement-mode": "DISABLED"
+    }
+  ]
+}

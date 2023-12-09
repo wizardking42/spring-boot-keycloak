@@ -1,5 +1,10 @@
 package dev.edu.keycloak.config;
 
+import org.keycloak.adapters.authorization.integration.jakarta.ServletPolicyEnforcerFilter;
+import org.keycloak.adapters.authorization.spi.ConfigurationResolver;
+import org.keycloak.adapters.authorization.spi.HttpRequest;
+import org.keycloak.representations.adapters.config.PolicyEnforcerConfig;
+import org.keycloak.util.JsonSerialization;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -10,6 +15,8 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configurers.CsrfConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
+
+import java.io.IOException;
 
 @Configuration
 @EnableWebSecurity
@@ -37,6 +44,7 @@ public class SecurityConfig
                         //.requestMatchers(HttpMethod.GET, "api/v1/demo/hello").authenticated()
                         //.requestMatchers(HttpMethod.GET, "api/v1/demo/hello2").authenticated()
                         .requestMatchers(HttpMethod.POST, "/keycloak/api/users").permitAll()
+                        .requestMatchers("/swagger-ui/**", "/v3/api-docs/**").permitAll()
                         //.requestMatchers(HttpMethod.GET, "keycloak/api/users").permitAll()
                         //.requestMatchers(HttpMethod.DELETE, "keycloak/api/users/{userId}").permitAll()
                         .anyRequest().authenticated()
@@ -47,8 +55,29 @@ public class SecurityConfig
 //                .oauth2ResourceServer(oauth2 -> oauth2.jwt(Customizer.withDefaults()));
         http
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
+//        http
+//                .addFilterAfter(createPolicyEnforcerFilter(), BearerTokenAuthenticationFilter.class);
 
         return http.build();
+    }
+
+    private ServletPolicyEnforcerFilter createPolicyEnforcerFilter()
+    {
+        return new ServletPolicyEnforcerFilter(new ConfigurationResolver()
+        {
+            @Override
+            public PolicyEnforcerConfig resolve(HttpRequest request)
+            {
+                try
+                {
+                    return JsonSerialization.readValue(getClass().getResourceAsStream("/policy-enforcer.json"), PolicyEnforcerConfig.class);
+                }
+                catch (IOException e)
+                {
+                    throw new RuntimeException(e);
+                }
+            }
+        });
     }
 
     // Removes need for appending "ROLE_" to role names (Cf. JwtAuthConverter)

@@ -34,13 +34,6 @@ public class KeycloakUserService implements IKeycloakUserService
     {
         UserRepresentation user = mapUserRep(userRegistrationRecord);
 
-        CredentialRepresentation credentialRepresentation = getCredentialRepresentation(userRegistrationRecord);
-
-        List<CredentialRepresentation> credentials = new ArrayList<>();
-        credentials.add(credentialRepresentation);
-
-        user.setCredentials(credentials);
-
         UsersResource usersResource = getUsersResource();
         Response response = usersResource.create(user);
 
@@ -48,7 +41,6 @@ public class KeycloakUserService implements IKeycloakUserService
         {
             return userRegistrationRecord;
         }
-
         return null;
     }
 
@@ -87,6 +79,10 @@ public class KeycloakUserService implements IKeycloakUserService
         user.setLastName(userRegistrationRecord.lastName());
         user.setEmailVerified(true);
         user.setEnabled(true);
+
+        List<CredentialRepresentation> credentials = new ArrayList<>();
+        CredentialRepresentation credentialRepresentation = getCredentialRepresentation(userRegistrationRecord);
+        user.setCredentials(credentials);
 
         return user;
     }
