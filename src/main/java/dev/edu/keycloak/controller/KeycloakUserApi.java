@@ -2,7 +2,6 @@ package dev.edu.keycloak.controller;
 
 import dev.edu.keycloak.model.UserRegistrationRecord;
 import dev.edu.keycloak.service.KeycloakUserService;
-import org.keycloak.representations.idm.UserRepresentation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -21,13 +20,14 @@ public class KeycloakUserApi
     }
 
     @PostMapping
+    //@PreAuthorize("permitAll()")
     public UserRegistrationRecord createUser(@RequestBody UserRegistrationRecord userRegistrationRecord)
     {
         return keycloakUserService.createUser(userRegistrationRecord);
     }
 
     @GetMapping
-    public UserRepresentation getUser(Principal principal)
+    public UserRegistrationRecord getUser(Principal principal)
     {
         return keycloakUserService.getUserById(principal.getName());
     }

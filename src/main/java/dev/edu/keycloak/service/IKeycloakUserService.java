@@ -1,11 +1,13 @@
 package dev.edu.keycloak.service;
 
 import dev.edu.keycloak.model.UserRegistrationRecord;
-import org.keycloak.representations.idm.UserRepresentation;
+
+import java.util.List;
 
 public interface IKeycloakUserService
 {
     UserRegistrationRecord createUser(UserRegistrationRecord user);
-    UserRepresentation getUserById(String userId);
+    UserRegistrationRecord getUserById(String userId);
+    List<UserRegistrationRecord> getUsers();
     void deleteUserById(String userId);
 }

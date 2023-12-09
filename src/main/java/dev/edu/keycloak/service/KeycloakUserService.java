@@ -1,9 +1,9 @@
 package dev.edu.keycloak.service;
 
+import dev.edu.keycloak.config.KeycloakConfig;
 import dev.edu.keycloak.model.UserRegistrationRecord;
 import jakarta.ws.rs.core.Response;
 import org.keycloak.admin.client.Keycloak;
-import org.keycloak.admin.client.resource.RealmResource;
 import org.keycloak.admin.client.resource.UsersResource;
 import org.keycloak.representations.idm.CredentialRepresentation;
 import org.keycloak.representations.idm.UserRepresentation;
@@ -18,28 +18,21 @@ import java.util.Objects;
 @Service
 public class KeycloakUserService implements IKeycloakUserService
 {
+    private KeycloakConfig keycloakConfig;
     @Value("${keycloak.realm}")
     private String realm;
-    @Value("${keycloak.urls.auth}")
-    private String authServerUrl;
-    @Value("{keycloak.adminClientId}")
-    private String adminClientId;
-    @Value("{keycloak.adminClientSecret}")
-    private String adminClientSecret;
-
-    private Keycloak keycloak;
 
     @Autowired
-    public KeycloakUserService(Keycloak keycloak)
+    public KeycloakUserService(KeycloakConfig keycloakConfig)
     {
-        this.keycloak = keycloak;
+        this.keycloakConfig = keycloakConfig;
     }
 
 
     @Override
     public UserRegistrationRecord createUser(UserRegistrationRecord userRegistrationRecord)
     {
-        UserRepresentation user = getUserRepresentation(userRegistrationRecord);
+        UserRepresentation user = mapUserRep(userRegistrationRecord);
 
         CredentialRepresentation credentialRepresentation = getCredentialRepresentation(userRegistrationRecord);
 
@@ -60,11 +53,21 @@ public class KeycloakUserService implements IKeycloakUserService
     }
 
     @Override
-    public UserRepresentation getUserById(String userId)
+    public UserRegistrationRecord getUserById(String userId)
     {
         UsersResource usersResource = getUsersResource();
 
-        return usersResource.get(userId).toRepresentation();
+        UserRepresentation userRepresentation = usersResource.get(userId).toRepresentation();
+
+        return mapUser(userRepresentation);
+    }
+
+    @Override
+    public List<UserRegistrationRecord> getUsers()
+    {
+        List<UserRepresentation> userRepresentations = getUsersResource().list();
+
+        return mapUsers(userRepresentations);
     }
 
     @Override
@@ -75,7 +78,7 @@ public class KeycloakUserService implements IKeycloakUserService
     }
 
     // ================================ Helper Methods ================================
-    private static UserRepresentation getUserRepresentation(UserRegistrationRecord userRegistrationRecord)
+    private UserRepresentation mapUserRep(UserRegistrationRecord userRegistrationRecord)
     {
         UserRepresentation user = new UserRepresentation();
         user.setUsername(userRegistrationRecord.username());
@@ -84,6 +87,7 @@ public class KeycloakUserService implements IKeycloakUserService
         user.setLastName(userRegistrationRecord.lastName());
         user.setEmailVerified(true);
         user.setEnabled(true);
+
         return user;
     }
 
@@ -98,7 +102,36 @@ public class KeycloakUserService implements IKeycloakUserService
 
     private UsersResource getUsersResource()
     {
-        RealmResource realmResource = keycloak.realm(realm);
-        return realmResource.users();
+//        RealmResource realmResource = keycloak.realm(realm);
+//        return realmResource.users();
+        Keycloak kc = keycloakConfig.getKeycloakInstance();
+        return kc.realm(realm).users();
+    }
+
+    // Method that converts a UserRepresentation object to a UserRegistrationRecord object
+    private UserRegistrationRecord mapUser(UserRepresentation userRep)
+    {
+        UserRegistrationRecord userRegRec = new UserRegistrationRecord(
+                userRep.getUsername(),
+                userRep.getFirstName(),
+                userRep.getLastName(),
+                userRep.getEmail(),
+                null
+        );
+        return userRegRec;
+    }
+
+    // Method that converts a list of UserRepresentation objects to a list of UserRegistrationRecord objects
+    private List<UserRegistrationRecord> mapUsers(List<UserRepresentation> userRep)
+    {
+        List<UserRegistrationRecord> userRegistrationRecords = new ArrayList<>();
+
+        for (UserRepresentation userRepresentation : userRep)
+        {
+            UserRegistrationRecord userRegRec = mapUser(userRepresentation);
+
+            userRegistrationRecords.add(userRegRec);
+        }
+        return userRegistrationRecords;
     }
 }

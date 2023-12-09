@@ -43,13 +43,15 @@ public class SecurityConfig
                 );
         http
                 .oauth2ResourceServer(oauth2 -> oauth2.jwt(jwt -> jwt.jwtAuthenticationConverter(jwtAuthConverter)));
+//        http
+//                .oauth2ResourceServer(oauth2 -> oauth2.jwt(Customizer.withDefaults()));
         http
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
 
         return http.build();
     }
 
-    // Removes need for appending "ROLE_" to role names
+    // Removes need for appending "ROLE_" to role names (Cf. JwtAuthConverter)
     @Bean
     public DefaultMethodSecurityExpressionHandler msecurity()
     {
