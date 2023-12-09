@@ -9,7 +9,7 @@ import java.security.Principal;
 
 @RestController
 @RequestMapping("keycloak/api/users")
-//@SecurityRequirement(name = "Keycloak")
+//@SecurityRequirement(name = "Keycloak") // Swagger-UI
 public class KeycloakUserApi
 {
     private final KeycloakUserService keycloakUserService;
@@ -21,7 +21,6 @@ public class KeycloakUserApi
     }
 
     @PostMapping
-    //@PreAuthorize("permitAll()")
     public UserRegistrationRecord createUser(@RequestBody UserRegistrationRecord userRegistrationRecord)
     {
         return keycloakUserService.createUser(userRegistrationRecord);

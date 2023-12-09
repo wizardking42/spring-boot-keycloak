@@ -4,6 +4,7 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
+// Swagger-UI
 //@SecurityScheme(
 //		name = "Keycloak",
 //		openIdConnectUrl = "http://localhost:8080/realms/myrealm/.well-known/openid-configuration",
