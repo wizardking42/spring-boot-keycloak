@@ -3,6 +3,7 @@ package dev.edu.keycloak.controller;
 import dev.edu.keycloak.model.UserRegistrationRecord;
 import dev.edu.keycloak.service.KeycloakUserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
@@ -21,7 +22,7 @@ public class KeycloakUserApi
     }
 
     @PostMapping
-    public int createUser(@RequestBody UserRegistrationRecord userRegistrationRecord)
+    public ResponseEntity<UserRegistrationRecord> createUser(@RequestBody UserRegistrationRecord userRegistrationRecord)
     {
         return keycloakUserService.createUser(userRegistrationRecord);
     }

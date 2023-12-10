@@ -9,10 +9,13 @@ import org.keycloak.representations.idm.CredentialRepresentation;
 import org.keycloak.representations.idm.UserRepresentation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 @Service
 public class KeycloakUserService implements IKeycloakUserService
@@ -29,19 +32,18 @@ public class KeycloakUserService implements IKeycloakUserService
 
 
     @Override
-    public int createUser(UserRegistrationRecord userRegistrationRecord)
+    public ResponseEntity<UserRegistrationRecord> createUser(UserRegistrationRecord userRegistrationRecord)
     {
         UserRepresentation user = mapUserRep(userRegistrationRecord);
 
         UsersResource usersResource = getUsersResource();
         Response response = usersResource.create(user);
 
-//        if (Objects.equals(response.getStatus(), 201))
-//        {
-//            return userRegistrationRecord;
-//        }
-//        return null;
-        return response.getStatus();
+        if (Objects.equals(response.getStatus(), 201))
+        {
+            return new ResponseEntity<>(userRegistrationRecord, HttpStatus.CREATED);
+        }
+        return new ResponseEntity<>(HttpStatus.valueOf(response.getStatus()));
     }
 
     @Override
