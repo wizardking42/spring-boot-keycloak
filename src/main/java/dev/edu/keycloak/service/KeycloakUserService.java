@@ -29,7 +29,7 @@ public class KeycloakUserService implements IKeycloakUserService
 
 
     @Override
-    public Response createUser(UserRegistrationRecord userRegistrationRecord)
+    public int createUser(UserRegistrationRecord userRegistrationRecord)
     {
         UserRepresentation user = mapUserRep(userRegistrationRecord);
 
@@ -41,7 +41,7 @@ public class KeycloakUserService implements IKeycloakUserService
 //            return userRegistrationRecord;
 //        }
 //        return null;
-        return response;
+        return response.getStatus();
     }
 
     @Override

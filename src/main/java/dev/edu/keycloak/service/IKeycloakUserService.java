@@ -7,7 +7,7 @@ import java.util.List;
 
 public interface IKeycloakUserService
 {
-    Response createUser(UserRegistrationRecord user);
+    int createUser(UserRegistrationRecord user);
     UserRegistrationRecord getUserById(String userId);
     List<UserRegistrationRecord> getUsers();
     void deleteUserById(String userId);
