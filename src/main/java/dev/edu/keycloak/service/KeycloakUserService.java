@@ -13,7 +13,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 @Service
 public class KeycloakUserService implements IKeycloakUserService
@@ -30,18 +29,19 @@ public class KeycloakUserService implements IKeycloakUserService
 
 
     @Override
-    public UserRegistrationRecord createUser(UserRegistrationRecord userRegistrationRecord)
+    public Response createUser(UserRegistrationRecord userRegistrationRecord)
     {
         UserRepresentation user = mapUserRep(userRegistrationRecord);
 
         UsersResource usersResource = getUsersResource();
         Response response = usersResource.create(user);
 
-        if (Objects.equals(response.getStatus(), 201))
-        {
-            return userRegistrationRecord;
-        }
-        return null;
+//        if (Objects.equals(response.getStatus(), 201))
+//        {
+//            return userRegistrationRecord;
+//        }
+//        return null;
+        return response;
     }
 
     @Override
