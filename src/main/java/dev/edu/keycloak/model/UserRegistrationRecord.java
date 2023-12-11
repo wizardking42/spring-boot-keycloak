@@ -1,4 +1,10 @@
 package dev.edu.keycloak.model;
 
-public record UserRegistrationRecord(String username, String firstName, String lastName, String email, String password)
-{}
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
+public record UserRegistrationRecord(
+        String username,
+        String firstName,
+        String lastName,
+        String email,
+        @JsonIgnore String password) {}

@@ -28,16 +28,16 @@ public class KeycloakUserApi
         return keycloakUserService.createUser(userRegistrationRecord);
     }
 
-    @GetMapping("/user")
-    public UserRegistrationRecord getUser(Principal principal)
-    {
-        return keycloakUserService.getUserById(principal.getName());
-    }
-
     @GetMapping
     public List<UserRegistrationRecord> getUsers()
     {
         return keycloakUserService.getUsers();
+    }
+
+    @GetMapping("/user")
+    public UserRegistrationRecord getUser(Principal principal)
+    {
+        return keycloakUserService.getUserById(principal.getName());
     }
 
     @DeleteMapping("/{userId}")

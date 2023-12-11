@@ -40,7 +40,7 @@ public class SecurityConfig
                         .requestMatchers(HttpMethod.POST, "keycloak/api/users/register").permitAll()
                         .requestMatchers(HttpMethod.GET, "keycloak/api/users").hasRole("admin")
                         .requestMatchers(HttpMethod.GET, "keycloak/api/users/user").authenticated()
-                        //.requestMatchers(HttpMethod.DELETE, "keycloak/api/users/{userId}").permitAll()
+                        .requestMatchers(HttpMethod.DELETE, "keycloak/api/users/{userId}").hasRole("admin")
                         //.requestMatchers("/swagger-ui/**", "/v3/api-docs/**").permitAll()
                         .anyRequest().authenticated()
                 );
