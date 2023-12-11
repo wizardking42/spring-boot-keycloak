@@ -48,11 +48,11 @@
 			<artifactId>spring-boot-starter-oauth2-resource-server</artifactId>
 		</dependency>
 
-		<dependency>
-			<groupId>org.projectlombok</groupId>
-			<artifactId>lombok</artifactId>
-			<optional>true</optional>
-		</dependency>
+<!--		<dependency>-->
+<!--			<groupId>org.projectlombok</groupId>-->
+<!--			<artifactId>lombok</artifactId>-->
+<!--			<optional>true</optional>-->
+<!--		</dependency>-->
 
 <!--		&lt;!&ndash; https://mvnrepository.com/artifact/org.springdoc/springdoc-openapi-starter-webmvc-ui &ndash;&gt;-->
 <!--		<dependency>-->
@@ -82,6 +82,14 @@
 			<version>23.0.1</version>
 			<scope>provided</scope>
 		</dependency>
+
+		<!-- https://mvnrepository.com/artifact/org.springframework/spring-webflux -->
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-webflux</artifactId>
+			<version>6.1.1</version>
+		</dependency>
+
 
 		<dependency>
 			<groupId>org.springframework.boot</groupId>

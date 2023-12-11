@@ -19,3 +19,10 @@ public class KeycloakApplication
 		SpringApplication.run(KeycloakApplication.class, args);
 	}
 }
+
+
+/*
+TODO: Get access token from Keycloak
+    * 1. Retrieve access token from Keycloak
+    * 2. Include access token in the header of the request
+ */

@@ -15,8 +15,8 @@ public class KeycloakConfig
     private String authServerUrl;
     @Value("${keycloak.realm}")
     private String realm;
-    @Value("${keycloak.adminClientId}")
-    private String adminClientId;
+    @Value("${keycloak.adminCli}")
+    private String adminCli;
     @Value("${keycloak.username}")
     private String username;
     @Value("${keycloak.password}")
@@ -31,7 +31,7 @@ public class KeycloakConfig
                     .serverUrl(authServerUrl)
                     .realm(realm)
                     .grantType(OAuth2Constants.PASSWORD)
-                    .clientId(adminClientId)
+                    .clientId(adminCli)
                     .username(username)
                     .password(password)
                     .build();

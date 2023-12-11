@@ -2,17 +2,16 @@ package dev.edu.keycloak.controller;
 
 import dev.edu.keycloak.model.UserRegistrationRecord;
 import dev.edu.keycloak.service.KeycloakUserService;
+import jakarta.ws.rs.core.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import jakarta.ws.rs.core.Response;
 
 import java.util.List;
 
 @RestController
 @RequestMapping("keycloak/api/users")
 //@SecurityRequirement(name = "Keycloak") // Swagger-UI
-//TODO: Get access token from Keycloak
 public class KeycloakUserApi
 {
     private final KeycloakUserService keycloakUserService;
