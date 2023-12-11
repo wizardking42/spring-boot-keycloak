@@ -5,13 +5,14 @@ import dev.edu.keycloak.service.KeycloakUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import jakarta.ws.rs.core.Response;
 
-import java.security.Principal;
 import java.util.List;
 
 @RestController
 @RequestMapping("keycloak/api/users")
 //@SecurityRequirement(name = "Keycloak") // Swagger-UI
+//TODO: Get access token from Keycloak
 public class KeycloakUserApi
 {
     private final KeycloakUserService keycloakUserService;
@@ -34,15 +35,21 @@ public class KeycloakUserApi
         return keycloakUserService.getUsers();
     }
 
-    @GetMapping("/user")
-    public UserRegistrationRecord getUser(Principal principal)
+//    @GetMapping("/user")
+//    public UserRegistrationRecord getUser(Principal principal)
+//    {
+//        return keycloakUserService.getUserById(principal.getName());
+//    }
+
+    @GetMapping("/{userId}")
+    public UserRegistrationRecord getUser(@PathVariable String userId)
     {
-        return keycloakUserService.getUserById(principal.getName());
+        return keycloakUserService.getUserById(userId);
     }
 
     @DeleteMapping("/{userId}")
-    public void deleteUserById(@PathVariable String userId)
+    public Response deleteUserById(@PathVariable String userId)
     {
-        keycloakUserService.deleteUserById(userId);
+        return keycloakUserService.deleteUserById(userId);
     }
 }
