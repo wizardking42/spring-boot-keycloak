@@ -7,6 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
+import java.util.List;
 
 @RestController
 @RequestMapping("keycloak/api/users")
@@ -21,16 +22,22 @@ public class KeycloakUserApi
         this.keycloakUserService = keycloakUserService;
     }
 
-    @PostMapping
+    @PostMapping("/register")
     public ResponseEntity<UserRegistrationRecord> createUser(@RequestBody UserRegistrationRecord userRegistrationRecord)
     {
         return keycloakUserService.createUser(userRegistrationRecord);
     }
 
-    @GetMapping
+    @GetMapping("/user")
     public UserRegistrationRecord getUser(Principal principal)
     {
         return keycloakUserService.getUserById(principal.getName());
+    }
+
+    @GetMapping
+    public List<UserRegistrationRecord> getUsers()
+    {
+        return keycloakUserService.getUsers();
     }
 
     @DeleteMapping("/{userId}")

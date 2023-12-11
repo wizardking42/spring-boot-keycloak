@@ -37,10 +37,11 @@ public class SecurityConfig
                 .authorizeHttpRequests(requests -> requests
                         .requestMatchers(HttpMethod.GET, "api/v1/demo/hello").hasRole("user")
                         .requestMatchers(HttpMethod.GET, "api/v1/demo/hello2").hasRole("admin")
-                        .requestMatchers(HttpMethod.POST, "keycloak/api/users").permitAll()
-                        //.requestMatchers("/swagger-ui/**", "/v3/api-docs/**").permitAll()
-                        //.requestMatchers(HttpMethod.GET, "keycloak/api/users").permitAll()
+                        .requestMatchers(HttpMethod.POST, "keycloak/api/users/register").permitAll()
+                        .requestMatchers(HttpMethod.GET, "keycloak/api/users").hasRole("admin")
+                        .requestMatchers(HttpMethod.GET, "keycloak/api/users/user").authenticated()
                         //.requestMatchers(HttpMethod.DELETE, "keycloak/api/users/{userId}").permitAll()
+                        //.requestMatchers("/swagger-ui/**", "/v3/api-docs/**").permitAll()
                         .anyRequest().authenticated()
                 );
         http
