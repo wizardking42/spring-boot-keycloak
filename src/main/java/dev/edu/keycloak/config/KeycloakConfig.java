@@ -17,9 +17,9 @@ public class KeycloakConfig
     private String realm;
     @Value("${keycloak.adminCli}")
     private String adminCli;
-    @Value("${keycloak.username}")
+    @Value("${keycloak.admin-username}")
     private String username;
-    @Value("${keycloak.password}")
+    @Value("${keycloak.admin-password}")
     private String password;
 
     //@Bean

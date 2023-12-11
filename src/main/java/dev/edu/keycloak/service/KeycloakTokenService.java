@@ -7,7 +7,7 @@ import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
 
 @Service
-public class KeycloakTokenService
+public class KeycloakTokenService implements IKeycloakTokenService
 {
     @Value("${keycloak.server-url}")
     private String serverUrl;

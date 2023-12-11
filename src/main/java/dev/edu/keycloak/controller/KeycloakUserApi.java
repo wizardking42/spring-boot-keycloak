@@ -1,8 +1,7 @@
 package dev.edu.keycloak.controller;
 
-import dev.edu.keycloak.model.UserRegistrationRecord;
+import dev.edu.keycloak.model.User;
 import dev.edu.keycloak.service.KeycloakUserService;
-import jakarta.ws.rs.core.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -23,13 +22,13 @@ public class KeycloakUserApi
     }
 
     @PostMapping("/register")
-    public ResponseEntity<UserRegistrationRecord> createUser(@RequestBody UserRegistrationRecord userRegistrationRecord)
+    public ResponseEntity<User> createUser(@RequestBody User user)
     {
-        return keycloakUserService.createUser(userRegistrationRecord);
+        return keycloakUserService.createUser(user);
     }
 
     @GetMapping
-    public List<UserRegistrationRecord> getUsers()
+    public List<User> getUsers()
     {
         return keycloakUserService.getUsers();
     }
@@ -41,14 +40,15 @@ public class KeycloakUserApi
 //    }
 
     @GetMapping("/{userId}")
-    public UserRegistrationRecord getUser(@PathVariable String userId)
+    public User getUser(@PathVariable String userId)
     {
         return keycloakUserService.getUserById(userId);
     }
 
     @DeleteMapping("/{userId}")
-    public Response deleteUserById(@PathVariable String userId)
+    public String deleteUserById(@PathVariable String userId)
     {
-        return keycloakUserService.deleteUserById(userId);
+        keycloakUserService.deleteUserById(userId);
+        return "User with ID: " + userId + " has been deleted successfully!";
     }
 }

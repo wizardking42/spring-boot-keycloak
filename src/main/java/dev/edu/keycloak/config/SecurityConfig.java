@@ -26,13 +26,7 @@ public class SecurityConfig
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception
     {
-//        CsrfTokenRequestAttributeHandler requestHandler = new CsrfTokenRequestAttributeHandler();
-//        requestHandler.setCsrfRequestAttributeName("_csrf");
-
-
         http
-//                .csrf((csrf) -> csrf.csrfTokenRequestHandler(requestHandler)
-//                        .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse()))
                 .csrf(CsrfConfigurer::disable)
                 .authorizeHttpRequests(requests -> requests
                         .requestMatchers(HttpMethod.GET, "api/v1/demo/hello").hasRole("user")
@@ -42,13 +36,12 @@ public class SecurityConfig
                         .requestMatchers(HttpMethod.GET, "keycloak/api/users/user").authenticated()
                         .requestMatchers(HttpMethod.GET, "keycloak/api/users/{userId}").authenticated()
                         .requestMatchers(HttpMethod.DELETE, "keycloak/api/users/{userId}").hasRole("admin")
+                        .requestMatchers(HttpMethod.GET, "keycloak/api/test/getAccessToken").permitAll()
                         //.requestMatchers("/swagger-ui/**", "/v3/api-docs/**").permitAll()
                         .anyRequest().authenticated()
                 );
         http
                 .oauth2ResourceServer(oauth2 -> oauth2.jwt(jwt -> jwt.jwtAuthenticationConverter(jwtAuthConverter)));
-//        http
-//                .oauth2ResourceServer(oauth2 -> oauth2.jwt(Customizer.withDefaults()));
         http
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
 

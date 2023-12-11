@@ -1,7 +1,7 @@
 package dev.edu.keycloak.service;
 
 import dev.edu.keycloak.config.KeycloakConfig;
-import dev.edu.keycloak.model.UserRegistrationRecord;
+import dev.edu.keycloak.model.User;
 import jakarta.ws.rs.core.Response;
 import org.keycloak.admin.client.Keycloak;
 import org.keycloak.admin.client.resource.UsersResource;
@@ -34,7 +34,7 @@ public class KeycloakUserService implements IKeycloakUserService
 
 
     @Override
-    public ResponseEntity<UserRegistrationRecord> createUser(UserRegistrationRecord userRegistrationRecord)
+    public ResponseEntity<User> createUser(User userRegistrationRecord)
     {
         UserRepresentation user = mapUserRep(userRegistrationRecord);
 
@@ -44,6 +44,13 @@ public class KeycloakUserService implements IKeycloakUserService
         // Assign role to new user
         assignRole(user);
 
+        // Retrieve created user's ID from the Location header
+        String locationHeader = response.getHeaderString("Location");
+        String createdUserId = locationHeader.substring(locationHeader.lastIndexOf("/") + 1);
+
+        // Assign created user's ID to the userRegistrationRecord object
+        userRegistrationRecord.setId(createdUserId);
+
         if (Objects.equals(response.getStatus(), 201))
         {
             return new ResponseEntity<>(userRegistrationRecord, HttpStatus.CREATED);
@@ -52,8 +59,9 @@ public class KeycloakUserService implements IKeycloakUserService
     }
 
     @Override
-    public UserRegistrationRecord getUserById(String userId)
+    public User getUserById(String userId)
     {
+        // NOT TESTED
         UsersResource usersResource = getUsersResource();
 
         UserRepresentation userRepresentation = usersResource.get(userId).toRepresentation();
@@ -62,7 +70,7 @@ public class KeycloakUserService implements IKeycloakUserService
     }
 
     @Override
-    public List<UserRegistrationRecord> getUsers()
+    public List<User> getUsers()
     {
         List<UserRepresentation> userRepresentations = getUsersResource().list();
 
@@ -70,8 +78,9 @@ public class KeycloakUserService implements IKeycloakUserService
     }
 
     @Override
-    public UserRegistrationRecord updateUser(UserRegistrationRecord user)
+    public User updateUser(User user)
     {
+        // NOT TESTED
         UserRepresentation userRep = mapUserRep(user);
 
         UsersResource usersResource = getUsersResource();
@@ -107,13 +116,13 @@ public class KeycloakUserService implements IKeycloakUserService
         kc.realm(realm).users().get(id).roles().realmLevel().add(Arrays.asList(roleRep));
     }
 
-    private UserRepresentation mapUserRep(UserRegistrationRecord userRegistrationRecord)
+    private UserRepresentation mapUserRep(User userRegistrationRecord)
     {
         UserRepresentation user = new UserRepresentation();
-        user.setUsername(userRegistrationRecord.username());
-        user.setEmail(userRegistrationRecord.email());
-        user.setFirstName(userRegistrationRecord.firstName());
-        user.setLastName(userRegistrationRecord.lastName());
+        user.setUsername(userRegistrationRecord.getUsername());
+        user.setEmail(userRegistrationRecord.getEmail());
+        user.setFirstName(userRegistrationRecord.getFirstName());
+        user.setLastName(userRegistrationRecord.getLastName());
         user.setEmailVerified(true);
         user.setEnabled(true);
 
@@ -125,19 +134,19 @@ public class KeycloakUserService implements IKeycloakUserService
         return user;
     }
 
-    private static CredentialRepresentation getCredentialRepresentation(UserRegistrationRecord userRegistrationRecord)
+    private static CredentialRepresentation getCredentialRepresentation(User user)
     {
         CredentialRepresentation credentialRepresentation = new CredentialRepresentation();
         credentialRepresentation.setType(CredentialRepresentation.PASSWORD);
-        credentialRepresentation.setValue(userRegistrationRecord.password());
+        credentialRepresentation.setValue(user.getPassword());
         credentialRepresentation.setTemporary(false);
         return credentialRepresentation;
     }
 
     // Method that converts a UserRepresentation object to a UserRegistrationRecord object
-    private UserRegistrationRecord mapUser(UserRepresentation userRep)
+    private User mapUser(UserRepresentation userRep)
     {
-        UserRegistrationRecord userRegRec = new UserRegistrationRecord(
+        User userRegRec = new User(
                 userRep.getId(),
                 userRep.getUsername(),
                 userRep.getFirstName(),
@@ -149,16 +158,16 @@ public class KeycloakUserService implements IKeycloakUserService
     }
 
     // Method that converts a list of UserRepresentation objects to a list of UserRegistrationRecord objects
-    private List<UserRegistrationRecord> mapUsers(List<UserRepresentation> userRep)
+    private List<User> mapUsers(List<UserRepresentation> userRep)
     {
-        List<UserRegistrationRecord> userRegistrationRecords = new ArrayList<>();
+        List<User> users = new ArrayList<>();
 
         for (UserRepresentation userRepresentation : userRep)
         {
-            UserRegistrationRecord userRegRec = mapUser(userRepresentation);
+            User userRegRec = mapUser(userRepresentation);
 
-            userRegistrationRecords.add(userRegRec);
+            users.add(userRegRec);
         }
-        return userRegistrationRecords;
+        return users;
     }
 }
