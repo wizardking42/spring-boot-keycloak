@@ -45,6 +45,24 @@ public class KeycloakConfig
         return keycloak;
     }
 
+    public Keycloak getKc_demoClient_instance(String username, String pw)
+    {
+        if (keycloak == null)
+        {
+            keycloak = KeycloakBuilder.builder()
+                    .serverUrl(serverUrl)
+                    .realm(realm)
+                    .grantType(OAuth2Constants.PASSWORD)
+                    .clientId(clientId)
+                    .clientSecret(clientSecret)
+                    .username(username)
+                    .password(pw)
+                    .build();
+        }
+
+        return keycloak;
+    }
+
 //    public Keycloak getKc_adminCli_instance()
 //    {
 //        if (keycloak == null)

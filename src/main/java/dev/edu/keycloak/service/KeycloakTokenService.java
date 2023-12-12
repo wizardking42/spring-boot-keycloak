@@ -20,4 +20,9 @@ public class KeycloakTokenService implements IKeycloakTokenService
     {
         return keycloakConfig.getKc_demoClient_instance().tokenManager().getAccessToken();
     }
+
+//    public AccessTokenResponse getAccessToken(String username, String pw)
+//    {
+//        return keycloakConfig.getKc_demoClient_instance(username, pw).tokenManager().getAccessToken();
+//    }
 }

@@ -1,6 +1,7 @@
 package dev.edu.keycloak.controller;
 
 import dev.edu.keycloak.model.User;
+import dev.edu.keycloak.service.KeycloakTokenService;
 import dev.edu.keycloak.service.KeycloakUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -14,11 +15,13 @@ import java.util.List;
 public class KeycloakUserApi
 {
     private final KeycloakUserService keycloakUserService;
+    private final KeycloakTokenService keycloakTokenService;
 
     @Autowired
-    public KeycloakUserApi(KeycloakUserService keycloakUserService)
+    public KeycloakUserApi(KeycloakUserService keycloakUserService, KeycloakTokenService keycloakTokenService)
     {
         this.keycloakUserService = keycloakUserService;
+        this.keycloakTokenService = keycloakTokenService;
     }
 
     @PostMapping("/register")
