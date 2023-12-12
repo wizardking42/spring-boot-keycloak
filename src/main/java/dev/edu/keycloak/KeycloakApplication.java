@@ -3,7 +3,7 @@ package dev.edu.keycloak;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
-@SpringBootApplication
+
 // Swagger-UI
 //@SecurityScheme(
 //		name = "Keycloak",
@@ -12,6 +12,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 //		type = SecuritySchemeType.OPENIDCONNECT,
 //		in = SecuritySchemeIn.HEADER
 //)
+@SpringBootApplication
 public class KeycloakApplication
 {
 	public static void main(String[] args)

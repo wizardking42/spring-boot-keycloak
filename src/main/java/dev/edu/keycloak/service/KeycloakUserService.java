@@ -61,20 +61,31 @@ public class KeycloakUserService implements IKeycloakUserService
     @Override
     public User getUserById(String userId)
     {
-        // NOT TESTED
         UsersResource usersResource = getUsersResource();
 
-        UserRepresentation userRepresentation = usersResource.get(userId).toRepresentation();
-
-        return mapUser(userRepresentation);
+        try
+        {
+            UserRepresentation userRepresentation = usersResource.get(userId).toRepresentation();
+            return mapUser(userRepresentation);
+        }
+        catch (Exception e)
+        {
+            throw new RuntimeException(e);
+        }
     }
 
     @Override
     public List<User> getUsers()
     {
-        List<UserRepresentation> userRepresentations = getUsersResource().list();
-
-        return mapUsers(userRepresentations);
+        try
+        {
+            List<UserRepresentation> userRepresentations = getUsersResource().list();
+            return mapUsers(userRepresentations);
+        }
+        catch (Exception e)
+        {
+            throw new RuntimeException(e);
+        }
     }
 
     @Override
@@ -84,32 +95,43 @@ public class KeycloakUserService implements IKeycloakUserService
         UserRepresentation userRep = mapUserRep(user);
 
         UsersResource usersResource = getUsersResource();
-        usersResource.get(userRep.getId()).update(userRep);
-
-        return user;
+        try
+        {
+            usersResource.get(userRep.getId()).update(userRep);
+            return user;
+        }
+        catch (Exception e)
+        {
+            throw new RuntimeException(e);
+        }
     }
 
     @Override
     public Response deleteUserById(String userId)
     {
         UsersResource usersResource = getUsersResource();
-        usersResource.delete(userId);
+        try
+        {
+            usersResource.delete(userId);
+        }
+        catch (Exception e)
+        {
+            return Response.status(Response.Status.NOT_FOUND).build();
+        }
 
         return Response.ok().build();
     }
 
-    // ================================ Helper Methods ================================
+    // ========================================== Helper Methods ==========================================
     private UsersResource getUsersResource()
     {
-//        RealmResource realmResource = keycloak.realm(realm);
-//        return realmResource.users();
-        Keycloak kc = keycloakConfig.getKc_adminCli_instance();
+        Keycloak kc = keycloakConfig.getKc_demoClient_instance();
         return kc.realm(realm).users();
     }
 
     private void assignRole(UserRepresentation user)
     {
-        Keycloak kc = keycloakConfig.getKc_adminCli_instance();
+        Keycloak kc = keycloakConfig.getKc_demoClient_instance();
 
         String id = kc.realm(realm).users().search(user.getUsername()).get(0).getId();
         RoleRepresentation roleRep = kc.realm(realm).roles().get("user").toRepresentation();

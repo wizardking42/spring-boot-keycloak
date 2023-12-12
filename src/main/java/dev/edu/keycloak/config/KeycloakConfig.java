@@ -6,7 +6,6 @@ import org.keycloak.admin.client.KeycloakBuilder;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
-//@Configuration
 @Component
 public class KeycloakConfig
 {
@@ -27,23 +26,6 @@ public class KeycloakConfig
     @Value("${keycloak.client-secret}")
     private String clientSecret;
 
-    //@Bean
-    public Keycloak getKc_adminCli_instance()
-    {
-        if (keycloak == null)
-        {
-            keycloak = KeycloakBuilder.builder()
-                    .serverUrl(serverUrl)
-                    .realm(realm)
-                    .grantType(OAuth2Constants.PASSWORD)
-                    .clientId(adminCli)
-                    .username(admin_username)
-                    .password(admin_pw)
-                    .build();
-        }
-
-        return keycloak;
-    }
 
     public Keycloak getKc_demoClient_instance()
     {
@@ -62,4 +44,21 @@ public class KeycloakConfig
 
         return keycloak;
     }
+
+//    public Keycloak getKc_adminCli_instance()
+//    {
+//        if (keycloak == null)
+//        {
+//            keycloak = KeycloakBuilder.builder()
+//                    .serverUrl(serverUrl)
+//                    .realm(realm)
+//                    .grantType(OAuth2Constants.PASSWORD)
+//                    .clientId(adminCli)
+//                    .username(admin_username)
+//                    .password(admin_pw)
+//                    .build();
+//        }
+//
+//        return keycloak;
+//    }
 }
