@@ -1,11 +1,11 @@
 package dev.edu.keycloak.controller;
 
 import dev.edu.keycloak.service.KeycloakTokenService;
+import org.keycloak.representations.AccessTokenResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import reactor.core.publisher.Mono;
 
 @RestController
 @RequestMapping("keycloak/api/test")
@@ -20,7 +20,7 @@ public class TestController
     }
 
     @GetMapping("/getAccessToken")
-    public Mono<String> getAccessToken()
+    public AccessTokenResponse getAccessToken()
     {
         return keycloakTokenService.getAdminAccessToken();
     }

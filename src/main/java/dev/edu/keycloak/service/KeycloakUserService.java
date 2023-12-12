@@ -103,13 +103,13 @@ public class KeycloakUserService implements IKeycloakUserService
     {
 //        RealmResource realmResource = keycloak.realm(realm);
 //        return realmResource.users();
-        Keycloak kc = keycloakConfig.getKeycloakInstance();
+        Keycloak kc = keycloakConfig.getKc_adminCli_instance();
         return kc.realm(realm).users();
     }
 
     private void assignRole(UserRepresentation user)
     {
-        Keycloak kc = keycloakConfig.getKeycloakInstance();
+        Keycloak kc = keycloakConfig.getKc_adminCli_instance();
 
         String id = kc.realm(realm).users().search(user.getUsername()).get(0).getId();
         RoleRepresentation roleRep = kc.realm(realm).roles().get("user").toRepresentation();

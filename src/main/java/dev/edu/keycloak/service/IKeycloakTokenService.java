@@ -1,8 +1,8 @@
 package dev.edu.keycloak.service;
 
-import reactor.core.publisher.Mono;
+import org.keycloak.representations.AccessTokenResponse;
 
 public interface IKeycloakTokenService
 {
-    Mono<String> getAdminAccessToken();
+    AccessTokenResponse getAdminAccessToken();
 }

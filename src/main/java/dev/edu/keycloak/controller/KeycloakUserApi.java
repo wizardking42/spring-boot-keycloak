@@ -2,6 +2,7 @@ package dev.edu.keycloak.controller;
 
 import dev.edu.keycloak.model.User;
 import dev.edu.keycloak.service.KeycloakUserService;
+import jakarta.ws.rs.core.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -46,9 +47,9 @@ public class KeycloakUserApi
     }
 
     @DeleteMapping("/{userId}")
-    public String deleteUserById(@PathVariable String userId)
+    public Response deleteUserById(@PathVariable String userId)
     {
-        keycloakUserService.deleteUserById(userId);
-        return "User with ID: " + userId + " has been deleted successfully!";
+        return keycloakUserService.deleteUserById(userId);
+        //return "User with ID: " + userId + " has been deleted successfully!";
     }
 }

@@ -12,28 +12,51 @@ public class KeycloakConfig
 {
     Keycloak keycloak;
     @Value("${keycloak.server-url}")
-    private String authServerUrl;
+    private String serverUrl;
     @Value("${keycloak.realm}")
     private String realm;
     @Value("${keycloak.adminCli}")
     private String adminCli;
     @Value("${keycloak.admin-username}")
-    private String username;
+    private String admin_username;
     @Value("${keycloak.admin-password}")
-    private String password;
+    private String admin_pw;
+
+    @Value("${keycloak.client-id}")
+    private String clientId;
+    @Value("${keycloak.client-secret}")
+    private String clientSecret;
 
     //@Bean
-    public Keycloak getKeycloakInstance()
+    public Keycloak getKc_adminCli_instance()
     {
         if (keycloak == null)
         {
             keycloak = KeycloakBuilder.builder()
-                    .serverUrl(authServerUrl)
+                    .serverUrl(serverUrl)
                     .realm(realm)
                     .grantType(OAuth2Constants.PASSWORD)
                     .clientId(adminCli)
-                    .username(username)
-                    .password(password)
+                    .username(admin_username)
+                    .password(admin_pw)
+                    .build();
+        }
+
+        return keycloak;
+    }
+
+    public Keycloak getKc_demoClient_instance()
+    {
+        if (keycloak == null)
+        {
+            keycloak = KeycloakBuilder.builder()
+                    .serverUrl(serverUrl)
+                    .realm(realm)
+                    .grantType(OAuth2Constants.PASSWORD)
+                    .clientId(clientId)
+                    .clientSecret(clientSecret)
+                    .username(admin_username)
+                    .password(admin_pw)
                     .build();
         }
 
