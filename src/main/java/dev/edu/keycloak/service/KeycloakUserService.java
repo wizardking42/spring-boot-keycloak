@@ -59,14 +59,13 @@ public class KeycloakUserService implements IKeycloakUserService
     }
 
     @Override
-    public User getUserById(String userId)
+    public UserRepresentation getUserById(String userId)
     {
         UsersResource usersResource = getUsersResource();
-
         try
         {
             UserRepresentation userRepresentation = usersResource.get(userId).toRepresentation();
-            return mapUser(userRepresentation);
+            return userRepresentation;
         }
         catch (Exception e)
         {
@@ -88,23 +87,23 @@ public class KeycloakUserService implements IKeycloakUserService
         }
     }
 
-    @Override
-    public User updateUser(User user)
-    {
-        // NOT TESTED
-        UserRepresentation userRep = mapUserRep(user);
-
-        UsersResource usersResource = getUsersResource();
-        try
-        {
-            usersResource.get(userRep.getId()).update(userRep);
-            return user;
-        }
-        catch (Exception e)
-        {
-            throw new RuntimeException(e);
-        }
-    }
+//    @Override
+//    public User updateUser(User user)
+//    {
+//        // NOT TESTED
+//        UserRepresentation userRep = mapUserRep(user);
+//
+//        UsersResource usersResource = getUsersResource();
+//        try
+//        {
+//            usersResource.get(userRep.getId()).update(userRep);
+//            return user;
+//        }
+//        catch (Exception e)
+//        {
+//            throw new RuntimeException(e);
+//        }
+//    }
 
     @Override
     public Response deleteUserById(String userId)
@@ -120,6 +119,18 @@ public class KeycloakUserService implements IKeycloakUserService
         }
 
         return Response.ok().build();
+    }
+
+    @Override
+    public String enableUser(String userId)
+    {
+        return changeUserStatus(userId, true);
+    }
+
+    @Override
+    public String disableUser(String userId)
+    {
+        return changeUserStatus(userId, false);
     }
 
     // ========================================== Helper Methods ==========================================
@@ -138,22 +149,50 @@ public class KeycloakUserService implements IKeycloakUserService
         kc.realm(realm).users().get(id).roles().realmLevel().add(Arrays.asList(roleRep));
     }
 
-    private UserRepresentation mapUserRep(User userRegistrationRecord)
+    private String changeUserStatus(String userId, boolean status)
     {
-        UserRepresentation user = new UserRepresentation();
-        user.setUsername(userRegistrationRecord.getUsername());
-        user.setEmail(userRegistrationRecord.getEmail());
-        user.setFirstName(userRegistrationRecord.getFirstName());
-        user.setLastName(userRegistrationRecord.getLastName());
-        user.setEmailVerified(true);
-        user.setEnabled(true);
+        String enabled_or_disabled = status ? "enabled" : "disabled";
 
-        List<CredentialRepresentation> credentials = new ArrayList<>();
-        CredentialRepresentation credentialRepresentation = getCredentialRepresentation(userRegistrationRecord);
-        credentials.add(credentialRepresentation);
-        user.setCredentials(credentials);
+        UserRepresentation userRep = getUserById(userId);
+        userRep.setEnabled(status);
+        //User user = mapUser(userRep);
 
-        return user;
+        UsersResource usersResource = getUsersResource();
+        try
+        {
+            usersResource.get(userId).update(userRep);
+        }
+        catch (Exception e)
+        {
+            throw new RuntimeException(e);
+        }
+
+        return "User " + userRep.getUsername() + " has been " + enabled_or_disabled + " successfully!";
+    }
+
+    private UserRepresentation mapUserRep(User user)
+    {
+        try
+        {
+            UserRepresentation userRep = new UserRepresentation();
+            userRep.setUsername(user.getUsername());
+            userRep.setEmail(user.getEmail());
+            userRep.setFirstName(user.getFirstName());
+            userRep.setLastName(user.getLastName());
+            userRep.setEmailVerified(true);
+            userRep.setEnabled(user.isEnabled());
+
+            List<CredentialRepresentation> credentials = new ArrayList<>();
+            CredentialRepresentation credentialRepresentation = getCredentialRepresentation(user);
+            credentials.add(credentialRepresentation);
+            userRep.setCredentials(credentials);
+
+            return userRep;
+        }
+        catch (Exception e)
+        {
+            throw new RuntimeException(e);
+        }
     }
 
     private static CredentialRepresentation getCredentialRepresentation(User user)
@@ -165,30 +204,38 @@ public class KeycloakUserService implements IKeycloakUserService
         return credentialRepresentation;
     }
 
-    // Method that converts a UserRepresentation object to a UserRegistrationRecord object
-    private User mapUser(UserRepresentation userRep)
+    // Method that converts a UserRepresentation object to a User object
+    public User mapUser(UserRepresentation userRep)
     {
-        User userRegRec = new User(
-                userRep.getId(),
-                userRep.getUsername(),
-                userRep.getFirstName(),
-                userRep.getLastName(),
-                userRep.getEmail(),
-                null
-        );
-        return userRegRec;
+        try
+        {
+            User user = new User(
+                    userRep.getId(),
+                    userRep.getUsername(),
+                    userRep.getFirstName(),
+                    userRep.getLastName(),
+                    userRep.getEmail(),
+                    null,
+                    userRep.isEnabled()
+            );
+            return user;
+        }
+        catch (Exception e)
+        {
+            throw new RuntimeException(e);
+        }
     }
 
-    // Method that converts a list of UserRepresentation objects to a list of UserRegistrationRecord objects
-    private List<User> mapUsers(List<UserRepresentation> userRep)
+    // Method that converts a list of UserRepresentation objects to a list of User objects
+    private List<User> mapUsers(List<UserRepresentation> userReps)
     {
         List<User> users = new ArrayList<>();
 
-        for (UserRepresentation userRepresentation : userRep)
+        for (UserRepresentation userRep : userReps)
         {
-            User userRegRec = mapUser(userRepresentation);
+            User user = mapUser(userRep);
 
-            users.add(userRegRec);
+            users.add(user);
         }
         return users;
     }

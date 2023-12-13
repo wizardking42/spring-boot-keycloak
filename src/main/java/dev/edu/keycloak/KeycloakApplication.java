@@ -26,6 +26,10 @@ public class KeycloakApplication
 TODO: Get access token from Keycloak
     * 1. Retrieve access token from Keycloak
     	- KeycloakTokenService.java > getAdminAccessToken() - TEST
-    * 2. Include access token in the header of the request
-    * 3. Pass username & pw
+    * 2. Include access token in the header of the request???
+    * 3. Pass username & pw???
+
+TODO: Update user
+	* 1. Update user
+		- KeycloakUserService.java > updateUser()
 */

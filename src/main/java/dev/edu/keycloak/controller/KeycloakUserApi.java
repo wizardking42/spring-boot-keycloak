@@ -3,6 +3,7 @@ package dev.edu.keycloak.controller;
 import dev.edu.keycloak.model.User;
 import dev.edu.keycloak.service.KeycloakTokenService;
 import dev.edu.keycloak.service.KeycloakUserService;
+import org.keycloak.representations.idm.UserRepresentation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -39,16 +40,29 @@ public class KeycloakUserApi
     @GetMapping("/{userId}")
     public User getUser(@PathVariable String userId)
     {
-        return keycloakUserService.getUserById(userId);
+        UserRepresentation userRep = keycloakUserService.getUserById(userId);
+        return keycloakUserService.mapUser(userRep);
     }
 
     @DeleteMapping("/{userId}")
     public String deleteUserById(@PathVariable String userId)
     {
-        String username = keycloakUserService.getUserById(userId).getUsername();
+        String username = keycloakUserService.mapUser(keycloakUserService.getUserById(userId)).getUsername();
         keycloakUserService.deleteUserById(userId);
         //return "User with ID: " + userId + " has been deleted successfully!";
         return "User " + username + " has been deleted successfully!";
+    }
+
+    @PostMapping("/enable/{userId}")
+    public String enableUser(@PathVariable String userId)
+    {
+        return keycloakUserService.enableUser(userId);
+    }
+
+    @PostMapping("/disable/{userId}")
+    public String disableUser(@PathVariable String userId)
+    {
+        return keycloakUserService.disableUser(userId);
     }
 
 //    @GetMapping("/user")

@@ -1,5 +1,6 @@
 package dev.edu.keycloak.model;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class User
@@ -11,7 +12,12 @@ public class User
     private String email;
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private String password;
+    private boolean enabled;
 
+//    public User()
+//    {}
+
+    @JsonCreator
     public User(String id, String username, String firstName, String lastName, String email, String password)
     {
         this.id = id;
@@ -20,6 +26,18 @@ public class User
         this.lastName = lastName;
         this.email = email;
         this.password = password;
+        this.enabled = true;
+    }
+
+    public User(String id, String username, String firstName, String lastName, String email, String password, boolean enabled)
+    {
+        this.id = id;
+        this.username = username;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.email = email;
+        this.password = password;
+        this.enabled = enabled;
     }
 
     public String getId()
@@ -52,6 +70,11 @@ public class User
         return password;
     }
 
+    public boolean isEnabled()
+    {
+        return enabled;
+    }
+
     public void setId(String id)
     {
         this.id = id;
@@ -80,5 +103,10 @@ public class User
     public void setPassword(String password)
     {
         this.password = password;
+    }
+
+    public void setEnabled(boolean enabled)
+    {
+        this.enabled = enabled;
     }
 }
