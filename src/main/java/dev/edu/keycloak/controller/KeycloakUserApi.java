@@ -53,7 +53,7 @@ public class KeycloakUserApi
     @DeleteMapping("/{userId}")
     public String deleteUserById(@PathVariable String userId)
     {
-        String username = keycloakUserService.mapUser(keycloakUserService.getUserById(userId)).getUsername();
+        String username = keycloakUserService.getUserById(userId).getUsername();
         keycloakUserService.deleteUserById(userId);
         //return "User with ID: " + userId + " has been deleted successfully!";
         return "User " + username + " has been deleted successfully!";

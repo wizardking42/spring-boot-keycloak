@@ -34,26 +34,26 @@ public class KeycloakUserService implements IKeycloakUserService
 
 
     @Override
-    public ResponseEntity<User> createUser(User userRegistrationRecord)
+    public ResponseEntity<User> createUser(User user)
     {
-        UserRepresentation user = mapUserRep(userRegistrationRecord);
+        UserRepresentation userRep = mapUserRep(user);
 
         UsersResource usersResource = getUsersResource();
-        Response response = usersResource.create(user);
+        Response response = usersResource.create(userRep);
 
-        // Assign role to new user
-        assignRole(user);
+        // Assign role to new userRep
+        assignRole(userRep);
 
-        // Retrieve created user's ID from the Location header
+        // Retrieve created userRep's ID from the Location header
         String locationHeader = response.getHeaderString("Location");
         String createdUserId = locationHeader.substring(locationHeader.lastIndexOf("/") + 1);
 
-        // Assign created user's ID to the userRegistrationRecord object
-        userRegistrationRecord.setId(createdUserId);
+        // Assign created userRep's ID to the user object
+        user.setId(createdUserId);
 
         if (Objects.equals(response.getStatus(), 201))
         {
-            return new ResponseEntity<>(userRegistrationRecord, HttpStatus.CREATED);
+            return new ResponseEntity<>(user, HttpStatus.CREATED);
         }
         return new ResponseEntity<>(HttpStatus.valueOf(response.getStatus()));
     }
@@ -87,7 +87,7 @@ public class KeycloakUserService implements IKeycloakUserService
         }
     }
 
-    // This method can only be used to update the user's first name, last name, and email.
+    // This method can only be used to update the user's first name, last name, and/or email.
     @Override
     public User updateUser(String userId, User user)
     {
@@ -148,7 +148,7 @@ public class KeycloakUserService implements IKeycloakUserService
     }
 
     // ========================================== Helper Methods ==========================================
-    private UsersResource getUsersResource()
+    public UsersResource getUsersResource()
     {
         Keycloak kc = keycloakConfig.getKc_demoClient_instance();
         return kc.realm(realm).users();
@@ -184,7 +184,7 @@ public class KeycloakUserService implements IKeycloakUserService
         return "User " + userRep.getUsername() + " has been " + enabled_or_disabled + " successfully!";
     }
 
-    private UserRepresentation mapUserRep(User user)
+    public UserRepresentation mapUserRep(User user)
     {
         try
         {

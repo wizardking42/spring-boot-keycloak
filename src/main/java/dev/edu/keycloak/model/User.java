@@ -14,8 +14,8 @@ public class User
     private String password;
     private boolean enabled;
 
-//    public User()
-//    {}
+    public User()
+    {}
 
     @JsonCreator
     public User(String id, String username, String firstName, String lastName, String email, String password)
