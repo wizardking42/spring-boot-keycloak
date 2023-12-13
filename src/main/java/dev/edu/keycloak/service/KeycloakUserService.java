@@ -87,23 +87,37 @@ public class KeycloakUserService implements IKeycloakUserService
         }
     }
 
-//    @Override
-//    public User updateUser(User user)
-//    {
-//        // NOT TESTED
-//        UserRepresentation userRep = mapUserRep(user);
-//
-//        UsersResource usersResource = getUsersResource();
-//        try
-//        {
-//            usersResource.get(userRep.getId()).update(userRep);
-//            return user;
-//        }
-//        catch (Exception e)
-//        {
-//            throw new RuntimeException(e);
-//        }
-//    }
+    // This method can only be used to update the user's first name, last name, and email.
+    @Override
+    public User updateUser(String userId, User user)
+    {
+        UserRepresentation userRep = getUserById(userId);
+
+        try
+        {
+            if (user.getFirstName() != null && !user.getFirstName().isEmpty())
+                userRep.setFirstName(user.getFirstName());
+            if (user.getLastName() != null && !user.getLastName().isEmpty())
+                userRep.setLastName(user.getLastName());
+            if (user.getEmail() != null && !user.getEmail().isEmpty())
+                userRep.setEmail(user.getEmail());
+
+            UsersResource usersResource = getUsersResource();
+            usersResource.get(userId).update(userRep);
+            return new User(
+                    userRep.getId(),
+                    userRep.getUsername(),
+                    userRep.getFirstName(),
+                    userRep.getLastName(),
+                    userRep.getEmail(),
+                    null,
+                    userRep.isEnabled());
+        }
+        catch (Exception e)
+        {
+            throw new RuntimeException(e);
+        }
+    }
 
     @Override
     public Response deleteUserById(String userId)

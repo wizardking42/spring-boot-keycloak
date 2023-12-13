@@ -12,7 +12,7 @@ public interface IKeycloakUserService
     ResponseEntity<User> createUser(User user);
     UserRepresentation getUserById(String userId);
     List<User> getUsers();
-    //User updateUser(User user);
+    User updateUser(String userId, User user);
     Response deleteUserById(String userId);
     String disableUser(String userId);
     String enableUser(String userId);

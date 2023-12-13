@@ -39,6 +39,7 @@ public class SecurityConfig
                         .requestMatchers(HttpMethod.GET, "keycloak/api/test/getAccessToken").permitAll()
                         .requestMatchers(HttpMethod.POST, "keycloak/api/users/enable/{userId}").hasRole("admin")
                         .requestMatchers(HttpMethod.POST, "keycloak/api/users/disable/{userId}").hasRole("admin")
+                        .requestMatchers(HttpMethod.PUT, "keycloak/api/users/{userId}").hasRole("admin")
                         //.requestMatchers("/swagger-ui/**", "/v3/api-docs/**").permitAll()
                         .anyRequest().authenticated()
                 );

@@ -44,6 +44,12 @@ public class KeycloakUserApi
         return keycloakUserService.mapUser(userRep);
     }
 
+    @PutMapping("/{userId}")
+    public User updateUser(@PathVariable String userId, @RequestBody User user)
+    {
+        return keycloakUserService.updateUser(userId, user);
+    }
+
     @DeleteMapping("/{userId}")
     public String deleteUserById(@PathVariable String userId)
     {
