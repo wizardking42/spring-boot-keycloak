@@ -34,28 +34,41 @@ public class KeycloakUserService implements IKeycloakUserService
 
 
     @Override
-    public ResponseEntity<User> createUser(User user)
+    public ResponseEntity<?> createUser(User user)
     {
         UserRepresentation userRep = mapUserRep(user);
 
         UsersResource usersResource = getUsersResource();
-        Response response = usersResource.create(userRep);
 
-        // Assign role to new userRep
-        assignRole(userRep);
-
-        // Retrieve created userRep's ID from the Location header
-        String locationHeader = response.getHeaderString("Location");
-        String createdUserId = locationHeader.substring(locationHeader.lastIndexOf("/") + 1);
-
-        // Assign created userRep's ID to the user object
-        user.setId(createdUserId);
-
-        if (Objects.equals(response.getStatus(), 201))
+        try
         {
-            return new ResponseEntity<>(user, HttpStatus.CREATED);
+            Response response = usersResource.create(userRep);
+            // Assign role to new userRep
+            assignRole(userRep);
+
+            // Retrieve created userRep's ID from the Location header
+            String locationHeader = response.getHeaderString("Location");
+
+            // Duplicate handling
+            if (locationHeader == null)
+                return new ResponseEntity<>("Duplicate user", HttpStatus.valueOf(response.getStatus()));
+
+            String createdUserId = locationHeader.substring(locationHeader.lastIndexOf("/") + 1);
+
+            // Assign created userRep's ID to the user object
+            user.setId(createdUserId);
+
+            if (Objects.equals(response.getStatus(), 201))
+            {
+                return new ResponseEntity<>(user, HttpStatus.CREATED);
+            }
+            return new ResponseEntity<>(HttpStatus.valueOf(response.getStatus()));
         }
-        return new ResponseEntity<>(HttpStatus.valueOf(response.getStatus()));
+        catch (Exception e)
+        {
+            //throw new RuntimeException(e);
+            return new ResponseEntity<>(e, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 
     @Override
@@ -150,8 +163,15 @@ public class KeycloakUserService implements IKeycloakUserService
     // ========================================== Helper Methods ==========================================
     public UsersResource getUsersResource()
     {
-        Keycloak kc = keycloakConfig.getKc_demoClient_instance();
-        return kc.realm(realm).users();
+        try
+        {
+            Keycloak kc = keycloakConfig.getKc_demoClient_instance();
+            return kc.realm(realm).users();
+        }
+        catch (Exception e)
+        {
+            throw new RuntimeException(e);
+        }
     }
 
     private void assignRole(UserRepresentation user)

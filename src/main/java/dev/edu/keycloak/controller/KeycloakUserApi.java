@@ -26,7 +26,7 @@ public class KeycloakUserApi
     }
 
     @PostMapping("/register")
-    public ResponseEntity<User> createUser(@RequestBody User user)
+    public ResponseEntity<?> createUser(@RequestBody User user)
     {
         return keycloakUserService.createUser(user);
     }

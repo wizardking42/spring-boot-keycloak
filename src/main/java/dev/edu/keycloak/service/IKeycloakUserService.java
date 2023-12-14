@@ -9,7 +9,7 @@ import java.util.List;
 
 public interface IKeycloakUserService
 {
-    ResponseEntity<User> createUser(User user);
+    ResponseEntity<?> createUser(User user);
     UserRepresentation getUserById(String userId);
     List<User> getUsers();
     User updateUser(String userId, User user);
