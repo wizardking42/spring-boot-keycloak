@@ -29,7 +29,6 @@ public class KeycloakUserApi
     public ResponseEntity<User> createUser(@RequestBody User user)
     {
         return keycloakUserService.createUser(user);
-        //ResponseEntity<User> result = keycloakUserService.createUser(user);
     }
 
     @GetMapping
